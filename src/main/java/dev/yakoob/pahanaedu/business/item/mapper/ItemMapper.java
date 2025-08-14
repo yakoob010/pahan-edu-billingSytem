@@ -13,7 +13,7 @@ public class ItemMapper {
         if (item == null) return null;
 
         return new ItemDTO.Builder()
-                .setItemCode(item.getItemCode())
+                .setItemCode(item.getItemCode()) // Integer
                 .setItemName(item.getItemName())
                 .setCategory(item.getCategory())
                 .setDescription(item.getDescription())
@@ -28,7 +28,7 @@ public class ItemMapper {
         if (dto == null) return null;
 
         return new Item.Builder()
-                .setItemCode(dto.getItemCode())
+                .setItemCode(dto.getItemCode()) // Integer
                 .setItemName(dto.getItemName())
                 .setCategory(dto.getCategory())
                 .setDescription(dto.getDescription())
@@ -40,21 +40,47 @@ public class ItemMapper {
     }
 
     public static ItemDTO buildItemDTOFromRequest(HttpServletRequest req) {
+        // Do not set itemCode for new items (auto-incremented by DB)
+        String itemName = req.getParameter("itemName");
+        String category = req.getParameter("category");
+        String description = req.getParameter("description");
+        String unitPriceStr = req.getParameter("unitPrice");
+        String stockQuantityStr = req.getParameter("stockQuantity");
+        String publisher = req.getParameter("publisher");
+        String author = req.getParameter("author");
+
+        Double unitPrice = null;
+        Integer stockQuantity = null;
+        try {
+            if (unitPriceStr != null && !unitPriceStr.isEmpty()) {
+                unitPrice = Double.parseDouble(unitPriceStr);
+            }
+        } catch (NumberFormatException e) {
+            unitPrice = null;
+        }
+        try {
+            if (stockQuantityStr != null && !stockQuantityStr.isEmpty()) {
+                stockQuantity = Integer.parseInt(stockQuantityStr);
+            }
+        } catch (NumberFormatException e) {
+            stockQuantity = null;
+        }
+
         return new ItemDTO.Builder()
-                .setItemCode(req.getParameter("itemCode"))
-                .setItemName(req.getParameter("itemName"))
-                .setCategory(req.getParameter("category"))
-                .setDescription(req.getParameter("description"))
-                .setUnitPrice(Double.parseDouble(req.getParameter("unitPrice")))
-                .setStockQuantity(Integer.parseInt(req.getParameter("stockQuantity")))
-                .setPublisher(req.getParameter("publisher"))
-                .setAuthor(req.getParameter("author"))
+                // .setItemCode(null) // Not set for new items
+                .setItemName(itemName)
+                .setCategory(category)
+                .setDescription(description)
+                .setUnitPrice(unitPrice)
+                .setStockQuantity(stockQuantity)
+                .setPublisher(publisher)
+                .setAuthor(author)
                 .build();
     }
 
     public static Item mapToItem(ResultSet rs) throws SQLException {
         return new Item(
-                rs.getString("item_code"),
+                rs.getInt("item_code"),
                 rs.getString("item_name"),
                 rs.getString("category"),
                 rs.getString("description"),

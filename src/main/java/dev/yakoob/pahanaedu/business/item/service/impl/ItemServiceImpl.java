@@ -9,7 +9,6 @@ import dev.yakoob.pahanaedu.persistence.item.dao.impl.ItemDAOImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ItemServiceImpl implements ItemService {
 
@@ -17,7 +16,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void saveItem(ItemDTO item) {
-        item.setItemCode(UUID.randomUUID().toString());
+        // Do not set or check itemCode; it is auto-incremented by the DB
         itemDAO.save(ItemMapper.toEntity(item));
     }
 

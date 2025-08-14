@@ -3,7 +3,7 @@ package dev.yakoob.pahanaedu.business.customer.model;
 import java.time.LocalDate;
 
 public class Customer {
-    private String customerId;
+    private Integer customerId;
     private String name;
     private String address;
     private String mobileNumber;
@@ -21,7 +21,7 @@ public class Customer {
         this.email = builder.email;
     }
 
-    public Customer(String customerId, String name, String address, String mobileNumber, int unitsConsumed, LocalDate registrationDate, String email) {
+    public Customer(Integer customerId, String name, String address, String mobileNumber, int unitsConsumed, LocalDate registrationDate, String email) {
         this.customerId = customerId;
         this.name = name;
         this.address = address;
@@ -31,8 +31,30 @@ public class Customer {
         this.email = email;
     }
 
+    // Getters and Setters
+    public Integer getCustomerId() { return customerId; }
+    public void setCustomerId(Integer customerId) { this.customerId = customerId; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public String getMobileNumber() { return mobileNumber; }
+    public void setMobileNumber(String mobileNumber) { this.mobileNumber = mobileNumber; }
+
+    public int getUnitsConsumed() { return unitsConsumed; }
+    public void setUnitsConsumed(int unitsConsumed) { this.unitsConsumed = unitsConsumed; }
+
+    public LocalDate getRegistrationDate() { return registrationDate; }
+    public void setRegistrationDate(LocalDate registrationDate) { this.registrationDate = registrationDate; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
     public static class Builder {
-        private String customerId;
+        private Integer customerId;
         private String name;
         private String address;
         private String mobileNumber;
@@ -40,7 +62,7 @@ public class Customer {
         private LocalDate registrationDate;
         private String email;
 
-        public Builder customerId(String customerId) {
+        public Builder customerId(Integer customerId) {
             this.customerId = customerId;
             return this;
         }
@@ -78,61 +100,5 @@ public class Customer {
         public Customer build() {
             return new Customer(this);
         }
-    }
-
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getMobileNumber() {
-        return mobileNumber;
-    }
-
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
-
-    public int getUnitsConsumed() {
-        return unitsConsumed;
-    }
-
-    public void setUnitsConsumed(int unitsConsumed) {
-        this.unitsConsumed = unitsConsumed;
-    }
-
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }

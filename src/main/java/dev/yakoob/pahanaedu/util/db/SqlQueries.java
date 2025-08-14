@@ -24,7 +24,7 @@ public class SqlQueries {
 
     public static final class Item {
         public static final String INSERT =
-            "INSERT INTO item (item_code, item_name, description, category, unit_price, stock_quantity, publisher, author) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO item (item_name, description, category, unit_price, stock_quantity, publisher, author) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         public static final String FIND_BY_ID =
             "SELECT * FROM item WHERE item_code = ?";

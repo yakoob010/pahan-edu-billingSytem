@@ -7,10 +7,8 @@ import dev.yakoob.pahanaedu.business.customer.service.CustomerService;
 import dev.yakoob.pahanaedu.persistence.customer.dao.CustomerDAO;
 import dev.yakoob.pahanaedu.persistence.customer.dao.impl.CustomerDAOImpl;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class CustomerServiceImpl implements CustomerService {
 
@@ -18,14 +16,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void saveCustomer(CustomerDTO customerDTO) {
-        customerDTO.setCustomerId(UUID.randomUUID().toString());
-        customerDTO.setRegistrationDate(LocalDate.now());
-        customerDTO.setUnitsConsumed(0);
         customerDAO.save(CustomerMapper.toEntity(customerDTO));
     }
 
     @Override
-    public CustomerDTO getCustomerById(String id) {
+    public CustomerDTO getCustomerById(int id) {
         return CustomerMapper.toDTO(customerDAO.findById(id));
     }
 
@@ -41,12 +36,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomer(String id, CustomerDTO customerDTO) {
+    public void updateCustomer(int id, CustomerDTO customerDTO) {
         customerDAO.update(id, CustomerMapper.toEntity(customerDTO));
     }
 
     @Override
-    public void deleteCustomer(String id) {
+    public void deleteCustomer(int id) {
         customerDAO.delete(id);
     }
 

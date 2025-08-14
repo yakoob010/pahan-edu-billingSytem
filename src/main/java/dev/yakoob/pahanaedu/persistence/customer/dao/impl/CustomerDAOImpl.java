@@ -18,7 +18,7 @@ try (
         Connection connection = DBConnection.getInstance().getConnection();
         PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.INSERT)
         ) {
-            pstm.setString(1, customer.getCustomerId());
+            pstm.setInt(1, customer.getCustomerId());
             pstm.setString(2, customer.getName());
             pstm.setString(3, customer.getAddress());
             pstm.setString(4, customer.getMobileNumber());
@@ -33,12 +33,12 @@ try (
     }
 
     @Override
-    public Customer findById(String id) {
+    public Customer findById(int id) {
         try (
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.FIND_BY_ID)
         ) {
-            pstm.setString(1, id);
+            pstm.setInt(1, id);
             try (ResultSet rs = pstm.executeQuery()) {
                 if (rs.next()) {
                     return CustomerMapper.mapToCustomer(rs);
@@ -68,7 +68,7 @@ try (
     }
 
     @Override
-    public void update(String id, Customer customer) {
+    public void update(int id, Customer customer) {
         try (
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.UPDATE)
@@ -77,7 +77,7 @@ try (
             pstm.setString(2, customer.getAddress());
             pstm.setString(3, customer.getMobileNumber());
             pstm.setString(4, customer.getEmail());
-            pstm.setString(5, id);
+            pstm.setInt(5, id);
 
             pstm.executeUpdate();
         } catch (Exception e) {
@@ -86,12 +86,12 @@ try (
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(int id) {
         try (
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.DELETE)
         ) {
-            pstm.setString(1, id);
+            pstm.setInt(1, id);
             pstm.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

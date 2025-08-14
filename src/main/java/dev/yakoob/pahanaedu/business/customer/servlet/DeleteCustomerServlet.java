@@ -23,8 +23,13 @@ public class DeleteCustomerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
         if (id != null && !id.isEmpty()) {
-            customerService.deleteCustomer(id);
-            req.getSession().setAttribute("flash_success", "Customer deleted successfully!");
+            try {
+                int customerId = Integer.parseInt(id);
+                customerService.deleteCustomer(customerId);
+                req.getSession().setAttribute("flash_success", "Customer deleted successfully!");
+            } catch (NumberFormatException e) {
+                req.getSession().setAttribute("flash_error", "Invalid customer id format!");
+            }
         } else {
             req.getSession().setAttribute("flash_error", "Missing or not a valid customer id!");
         }

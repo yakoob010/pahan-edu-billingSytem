@@ -8,13 +8,13 @@ public interface CustomerDAO {
 
     void save(Customer customer);
 
-    Customer findById(String id);
+    Customer findById(int id);
 
     List<Customer> findAll();
 
-    void update(String id, Customer customer);
+    void update(int id, Customer customer);
 
-    void delete(String id);
+    void delete(int id);
 
     int getCount();
 

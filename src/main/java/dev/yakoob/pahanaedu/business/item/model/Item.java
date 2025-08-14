@@ -1,7 +1,7 @@
 package dev.yakoob.pahanaedu.business.item.model;
 
 public class Item {
-    private String itemCode;
+    private Integer itemCode;
     private String itemName;
     private String category;
     private String description;
@@ -10,7 +10,7 @@ public class Item {
     private String publisher;
     private String author;
 
-    public Item(String itemCode, String itemName, String category, String description, Double unitPrice, Integer stockQuantity, String publisher, String author) {
+    public Item(Integer itemCode, String itemName, String category, String description, Double unitPrice, Integer stockQuantity, String publisher, String author) {
         this.itemCode = itemCode;
         this.itemName = itemName;
         this.category = category;
@@ -33,7 +33,7 @@ public class Item {
     }
 
     public static class Builder {
-        private String itemCode;
+        private Integer itemCode;
         private String itemName;
         private String category;
         private String description;
@@ -42,7 +42,7 @@ public class Item {
         private String publisher;
         private String author;
 
-        public Builder setItemCode(String itemCode) {
+        public Builder setItemCode(Integer itemCode) {
             this.itemCode = itemCode;
             return this;
         }
@@ -87,11 +87,11 @@ public class Item {
         }
     }
 
-    public String getItemCode() {
+    public Integer getItemCode() {
         return itemCode;
     }
 
-    public void setItemCode(String itemCode) {
+    public void setItemCode(Integer itemCode) {
         this.itemCode = itemCode;
     }
 
@@ -154,7 +154,7 @@ public class Item {
     @Override
     public String toString() {
         return "Item{" +
-                "itemCode='" + itemCode + '\'' +
+                "itemCode=" + itemCode +
                 ", itemName='" + itemName + '\'' +
                 ", category='" + category + '\'' +
                 ", description='" + description + '\'' +

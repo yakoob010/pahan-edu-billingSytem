@@ -38,17 +38,22 @@ public class CustomerMapper {
     }
 
     public static CustomerDTO buildCustomerDTOFromRequest(HttpServletRequest req) {
+        // Generate a 6-digit customer ID from timestamp
+        int customerId = (int)(System.currentTimeMillis() % 1000000);
+
         return new CustomerDTO.Builder()
+                .customerId(customerId)
                 .name(req.getParameter("name"))
                 .address(req.getParameter("address"))
                 .mobileNumber(req.getParameter("mobileNumber"))
+                .registrationDate(java.time.LocalDate.now())
                 .email(req.getParameter("email"))
                 .build();
     }
 
     public static Customer mapToCustomer(ResultSet rs) throws SQLException {
         return new Customer(
-            rs.getString("customer_id"),
+            rs.getInt("customer_id"),
             rs.getString("name"),
             rs.getString("address"),
             rs.getString("mobile_number"),

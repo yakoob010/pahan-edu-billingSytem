@@ -20,14 +20,21 @@ public class ItemDAOImpl implements ItemDAO {
                 Connection connection = DBConnection.getInstance().getConnection();
                 PreparedStatement pstm = connection.prepareStatement(SqlQueries.Item.INSERT)
         ) {
-            pstm.setString(1, item.getItemCode());
-            pstm.setString(2, item.getItemName());
-            pstm.setString(3, item.getDescription());
-            pstm.setString(4, item.getCategory());
-            pstm.setDouble(5, item.getUnitPrice());
-            pstm.setInt(6, item.getStockQuantity());
-            pstm.setString(7, item.getPublisher());
-            pstm.setString(8, item.getAuthor());
+            pstm.setString(1, item.getItemName());
+            pstm.setString(2, item.getDescription());
+            pstm.setString(3, item.getCategory());
+            if (item.getUnitPrice() != null) {
+                pstm.setDouble(4, item.getUnitPrice());
+            } else {
+                pstm.setNull(4, java.sql.Types.DOUBLE);
+            }
+            if (item.getStockQuantity() != null) {
+                pstm.setInt(5, item.getStockQuantity());
+            } else {
+                pstm.setNull(5, java.sql.Types.INTEGER);
+            }
+            pstm.setString(6, item.getPublisher());
+            pstm.setString(7, item.getAuthor());
 
             pstm.executeUpdate();
         } catch (Exception e) {
@@ -79,8 +86,16 @@ public class ItemDAOImpl implements ItemDAO {
             pstm.setString(1, item.getItemName());
             pstm.setString(2, item.getDescription());
             pstm.setString(3, item.getCategory());
-            pstm.setDouble(4, item.getUnitPrice());
-            pstm.setInt(5, item.getStockQuantity());
+            if (item.getUnitPrice() != null) {
+                pstm.setDouble(4, item.getUnitPrice());
+            } else {
+                pstm.setNull(4, java.sql.Types.DOUBLE);
+            }
+            if (item.getStockQuantity() != null) {
+                pstm.setInt(5, item.getStockQuantity());
+            } else {
+                pstm.setNull(5, java.sql.Types.INTEGER);
+            }
             pstm.setString(6, item.getPublisher());
             pstm.setString(7, item.getAuthor());
             pstm.setString(8, itemCode);
