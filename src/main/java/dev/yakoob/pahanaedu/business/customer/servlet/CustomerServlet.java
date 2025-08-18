@@ -4,8 +4,8 @@ import dev.yakoob.pahanaedu.business.customer.dto.CustomerDTO;
 import dev.yakoob.pahanaedu.business.customer.mapper.CustomerMapper;
 import dev.yakoob.pahanaedu.business.customer.service.CustomerService;
 import dev.yakoob.pahanaedu.business.customer.service.impl.CustomerServiceImpl;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +15,6 @@ import java.util.List;
 
 import static dev.yakoob.pahanaedu.util.validation.Validation.validateCustomerDTO;
 
-@WebServlet(name = "customer", urlPatterns = "/customer")
 public class CustomerServlet extends HttpServlet {
 
     private CustomerService customerService;
@@ -29,12 +28,12 @@ public class CustomerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<CustomerDTO> customerDTOList = customerService.getAllCustomers();
 
-        req.setAttribute("customerList", customerDTOList);
+        req.setAttribute("customers", customerDTOList);
         req.setAttribute("pageTitle", "Customer Management");
-        req.setAttribute("body", "../customer/view.jsp");
 
-        // Forward to JSP
-        req.getRequestDispatcher("/WEB-INF/views/layout/layout.jsp").forward(req, resp);
+        // Forward to the view
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/customer/view.jsp");
+        dispatcher.forward(req, resp);
     }
 
     @Override
