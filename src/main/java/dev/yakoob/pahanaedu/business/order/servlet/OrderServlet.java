@@ -6,10 +6,11 @@ import dev.yakoob.pahanaedu.business.item.service.ItemService;
 import dev.yakoob.pahanaedu.business.item.service.impl.ItemServiceImpl;
 import dev.yakoob.pahanaedu.business.order.dto.OrderDTO;
 import dev.yakoob.pahanaedu.business.order.dto.OrderItemDTO;
+import dev.yakoob.pahanaedu.business.order.model.Order;
 import dev.yakoob.pahanaedu.business.order.service.OrderService;
 import dev.yakoob.pahanaedu.business.order.service.impl.OrderServiceImpl;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "order", urlPatterns = "/order")
 public class OrderServlet extends HttpServlet {
 
     private CustomerService customerService;
@@ -27,73 +27,156 @@ public class OrderServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        customerService = new CustomerServiceImpl();
-        itemService = new ItemServiceImpl();
-        orderService = new OrderServiceImpl();
+        try {
+            customerService = new CustomerServiceImpl();
+            itemService = new ItemServiceImpl();
+            orderService = new OrderServiceImpl();
+            System.out.println("OrderServlet: All services initialized successfully");
+        } catch (Exception e) {
+            System.err.println("Warning: Service initialization failed: " + e.getMessage());
+            e.printStackTrace();
+            // Don't throw exception to allow servlet to still register
+        }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("OrderServlet doGet() called - servlet is being reached!");
 
-        req.setAttribute("customers", customerService.getAllCustomers());
-        req.setAttribute("items", itemService.getAllItems());
-        req.setAttribute("pageTitle", "Place Order");
-        req.setAttribute("body", "../order/view.jsp");
+        // Set request attributes for customers, items, and recent orders
+        try {
+            if (customerService != null) {
+                req.setAttribute("customers", customerService.getAllCustomers());
+                System.out.println("OrderServlet: Customers loaded successfully");
+            } else {
+                req.setAttribute("customers", new ArrayList<>());
+                System.out.println("OrderServlet: CustomerService is null, using empty list");
+            }
 
-        req.getRequestDispatcher("/WEB-INF/views/layout/layout.jsp").forward(req, resp);
+            if (itemService != null) {
+                req.setAttribute("items", itemService.getAllItems());
+                System.out.println("OrderServlet: Items loaded successfully");
+            } else {
+                req.setAttribute("items", new ArrayList<>());
+                System.out.println("OrderServlet: ItemService is null, using empty list");
+            }
+
+            // Load recent orders for display - using List<Order> not List<OrderDTO>
+            if (orderService != null) {
+                List<Order> recentOrders = orderService.getAllOrders();
+                req.setAttribute("recentOrders", recentOrders);
+                System.out.println("OrderServlet: Recent orders loaded successfully - " + recentOrders.size() + " orders");
+            } else {
+                req.setAttribute("recentOrders", new ArrayList<>());
+                System.out.println("OrderServlet: OrderService is null, using empty orders list");
+            }
+
+        } catch (Exception e) {
+            System.err.println("Error loading data: " + e.getMessage());
+            e.printStackTrace();
+            req.setAttribute("customers", new ArrayList<>());
+            req.setAttribute("items", new ArrayList<>());
+            req.setAttribute("recentOrders", new ArrayList<>());
+        }
+
+        req.setAttribute("pageTitle", "Create Invoice");
+
+        // Forward to JSP view
+        System.out.println("OrderServlet: Attempting JSP forward to /WEB-INF/views/order/view.jsp");
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/order/view.jsp");
+        dispatcher.forward(req, resp);
+        System.out.println("OrderServlet: JSP forward completed successfully");
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String customerId = req.getParameter("customerId");
-        String total = req.getParameter("total");
+        System.out.println("OrderServlet doPost() called - processing order creation");
 
-        // Prepare to collect order items
-        List<OrderItemDTO> orderItems = new ArrayList<>();
+        try {
+            if (orderService != null) {
+                String customerId = req.getParameter("customerId");
+                String total = req.getParameter("total");
 
-        int index = 0;
-        while (true) {
-            String code = req.getParameter("items[" + index + "].code");
-            String quantityStr = req.getParameter("items[" + index + "].quantity");
-            String priceStr = req.getParameter("items[" + index + "].price");
+                System.out.println("OrderServlet: Received customerId=" + customerId + ", total=" + total);
 
-            if (code == null || quantityStr == null || priceStr == null) {
-                break;
-            }
+                // Debug: Print all parameters
+                System.out.println("=== ALL FORM PARAMETERS ===");
+                req.getParameterMap().forEach((key, values) -> {
+                    System.out.println("Parameter: " + key + " = " + String.join(", ", values));
+                });
+                System.out.println("=== END PARAMETERS ===");
 
-            try {
-                int quantity = Integer.parseInt(quantityStr);
-                double price = Double.parseDouble(priceStr);
+                // Prepare to collect order items
+                List<OrderItemDTO> orderItems = new ArrayList<>();
 
-                OrderItemDTO item = new OrderItemDTO.Builder()
-                        .itemCode(code)
-                        .quantity(quantity)
-                        .unitPrice(price)
-                        .build();
+                int index = 0;
+                while (true) {
+                    String code = req.getParameter("items[" + index + "].code");
+                    String quantityStr = req.getParameter("items[" + index + "].quantity");
+                    String priceStr = req.getParameter("items[" + index + "].price");
 
-                orderItems.add(item);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+                    System.out.println("OrderServlet: Checking item " + index + " - code=" + code + ", quantity=" + quantityStr + ", price=" + priceStr);
 
-            index++;
-        }
+                    if (code == null || quantityStr == null || priceStr == null) {
+                        System.out.println("OrderServlet: No more items found at index " + index);
+                        break;
+                    }
 
-        if (customerId != null && total != null && !orderItems.isEmpty()){
-            OrderDTO orderDTO = new OrderDTO.Builder()
-                    .setCustomerId(customerId)
-                    .setOrderItems(orderItems)
-                    .setTotalAmount(Double.valueOf(total))
-                    .build();
+                    try {
+                        int quantity = Integer.parseInt(quantityStr);
+                        double price = Double.parseDouble(priceStr);
 
-            boolean isOrderSaved = orderService.saveOrder(orderDTO);
-            if (isOrderSaved) {
-                req.getSession().setAttribute("flash_success", "Order Placed successfully!");
+                        OrderItemDTO item = new OrderItemDTO.Builder()
+                                .itemCode(code)
+                                .quantity(quantity)
+                                .unitPrice(price)
+                                .build();
+
+                        orderItems.add(item);
+                        System.out.println("OrderServlet: Added item - code=" + code + ", qty=" + quantity + ", price=" + price);
+                    } catch (NumberFormatException e) {
+                        System.err.println("OrderServlet: Error parsing item data: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    index++;
+                }
+
+                System.out.println("OrderServlet: Final validation - customerId=" + customerId +
+                        ", total=" + total + ", orderItems.size=" + orderItems.size());
+                System.out.println("OrderServlet: Validation checks - customerId!=null: " + (customerId != null) +
+                        ", total!=null: " + (total != null) + ", !orderItems.isEmpty(): " + (!orderItems.isEmpty()));
+
+                if (customerId != null && total != null && !orderItems.isEmpty()) {
+                    OrderDTO orderDTO = new OrderDTO.Builder()
+                            .setCustomerId(customerId)
+                            .setOrderItems(orderItems)
+                            .setTotalAmount(Double.valueOf(total))
+                            .build();
+
+                    System.out.println("OrderServlet: Attempting to save order with " + orderItems.size() + " items");
+                    boolean isOrderSaved = orderService.saveOrder(orderDTO);
+
+                    if (isOrderSaved) {
+                        req.getSession().setAttribute("flash_success", "Order placed successfully!");
+                        System.out.println("OrderServlet: Order saved successfully to database");
+                    } else {
+                        req.getSession().setAttribute("flash_error", "Failed to place the order");
+                        System.err.println("OrderServlet: Order save failed");
+                    }
+                } else {
+                    req.getSession().setAttribute("flash_error", "Missing or invalid data!");
+                    System.err.println("OrderServlet: Invalid order data - customerId=" + customerId +
+                            ", total=" + total + ", items=" + orderItems.size());
+                }
             } else {
-                req.getSession().setAttribute("flash_error", "Failed to place the order");
+                req.getSession().setAttribute("flash_error", "Service not available. Please check database connection.");
+                System.err.println("OrderServlet: OrderService is null");
             }
-        } else {
-            req.getSession().setAttribute("flash_error", "Missing or not valid data!");
+        } catch (Exception e) {
+            System.err.println("Error processing order: " + e.getMessage());
+            e.printStackTrace();
+            req.getSession().setAttribute("flash_error", "Error processing order: " + e.getMessage());
         }
 
         resp.sendRedirect(req.getContextPath() + "/order");
