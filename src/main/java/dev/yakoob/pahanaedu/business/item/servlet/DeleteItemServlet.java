@@ -2,14 +2,12 @@ package dev.yakoob.pahanaedu.business.item.servlet;
 
 import dev.yakoob.pahanaedu.business.item.service.ItemService;
 import dev.yakoob.pahanaedu.business.item.service.impl.ItemServiceImpl;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "delete-item", urlPatterns = "/item/delete")
 public class DeleteItemServlet extends HttpServlet {
 
     private ItemService itemService;
@@ -31,4 +29,3 @@ public class DeleteItemServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/item");
     }
 }
-
