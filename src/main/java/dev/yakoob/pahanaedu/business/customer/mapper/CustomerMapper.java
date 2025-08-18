@@ -38,28 +38,41 @@ public class CustomerMapper {
     }
 
     public static CustomerDTO buildCustomerDTOFromRequest(HttpServletRequest req) {
-        // Generate a 6-digit customer ID from timestamp
-        int customerId = (int)(System.currentTimeMillis() % 1000000);
+        // For updates, the ID will be passed in the request
+        String idParam = req.getParameter("id");
+        int customerId = 0;
+
+        if (idParam != null && !idParam.isEmpty()) {
+            try {
+                customerId = Integer.parseInt(idParam);
+            } catch (NumberFormatException e) {
+                // If ID is invalid, it will be treated as a new customer
+                customerId = (int)(System.currentTimeMillis() % 1000000);
+            }
+        } else {
+            // Generate a new ID for new customers
+            customerId = (int)(System.currentTimeMillis() % 1000000);
+        }
 
         return new CustomerDTO.Builder()
                 .customerId(customerId)
                 .name(req.getParameter("name"))
                 .address(req.getParameter("address"))
                 .mobileNumber(req.getParameter("mobileNumber"))
-                .registrationDate(java.time.LocalDate.now())
                 .email(req.getParameter("email"))
+                .registrationDate(java.time.LocalDate.now()) // This will be ignored for updates
                 .build();
     }
 
     public static Customer mapToCustomer(ResultSet rs) throws SQLException {
         return new Customer(
-            rs.getInt("customer_id"),
-            rs.getString("name"),
-            rs.getString("address"),
-            rs.getString("mobile_number"),
-            rs.getInt("units_consumed"),
-            rs.getDate("registration_date").toLocalDate(),
-            rs.getString("email")
+                rs.getInt("customer_id"),
+                rs.getString("name"),
+                rs.getString("address"),
+                rs.getString("mobile_number"),
+                rs.getInt("units_consumed"),
+                rs.getDate("registration_date").toLocalDate(),
+                rs.getString("email")
         );
     }
 }
