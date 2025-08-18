@@ -44,7 +44,7 @@ public class SqlQueries {
 
     public static final class Order {
         public static final String INSERT =
-                "INSERT INTO orders (order_id, order_date, customer_id, total_amount) VALUES (?, ?, ?, ?)";
+                "INSERT INTO orders (order_date, customer_id, total_amount) VALUES (?, ?, ?)";
 
         public static final String COUNT =
             "SELECT COUNT(*) FROM orders";
@@ -56,3 +56,4 @@ public class SqlQueries {
     }
 
 }
+
