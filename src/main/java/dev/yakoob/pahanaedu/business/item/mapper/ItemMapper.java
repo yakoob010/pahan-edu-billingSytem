@@ -67,14 +67,13 @@ public class ItemMapper {
         }
 
         return new ItemDTO.Builder()
-                // .setItemCode(null) // Not set for new items
                 .setItemName(itemName)
                 .setCategory(category)
                 .setDescription(description)
                 .setUnitPrice(unitPrice)
                 .setStockQuantity(stockQuantity)
-                .setPublisher(publisher)
-                .setAuthor(author)
+                .setPublisher(publisher != null && !publisher.isEmpty() ? publisher : "N/A")
+                .setAuthor(author != null && !author.isEmpty() ? author : "N/A")
                 .build();
     }
 

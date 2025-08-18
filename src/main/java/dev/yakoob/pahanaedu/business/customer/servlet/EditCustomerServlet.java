@@ -5,7 +5,6 @@ import dev.yakoob.pahanaedu.business.customer.mapper.CustomerMapper;
 import dev.yakoob.pahanaedu.business.customer.service.CustomerService;
 import dev.yakoob.pahanaedu.business.customer.service.impl.CustomerServiceImpl;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +13,6 @@ import java.io.IOException;
 
 import static dev.yakoob.pahanaedu.util.validation.Validation.validateCustomerDTO;
 
-@WebServlet(name = "edit-customer", urlPatterns = "/customer/edit")
 public class EditCustomerServlet extends HttpServlet {
 
     private CustomerService customerService;
