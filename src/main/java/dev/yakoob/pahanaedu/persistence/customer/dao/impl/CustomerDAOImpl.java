@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerDAOImpl implements CustomerDAO {
-    
+
     @Override
     public void save(Customer customer) {
-try (
-        Connection connection = DBConnection.getInstance().getConnection();
-        PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.INSERT)
+        try (
+                Connection connection = DBConnection.getInstance().getConnection();
+                PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.INSERT)
         ) {
             pstm.setInt(1, customer.getCustomerId());
             pstm.setString(2, customer.getName());
@@ -35,8 +35,8 @@ try (
     @Override
     public Customer findById(int id) {
         try (
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.FIND_BY_ID)
+                Connection connection = DBConnection.getInstance().getConnection();
+                PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.FIND_BY_ID)
         ) {
             pstm.setInt(1, id);
             try (ResultSet rs = pstm.executeQuery()) {
@@ -54,9 +54,9 @@ try (
     public List<Customer> findAll() {
         List<Customer> customers = new ArrayList<>();
         try (
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.FIND_ALL);
-            ResultSet rs = pstm.executeQuery()
+                Connection connection = DBConnection.getInstance().getConnection();
+                PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.FIND_ALL);
+                ResultSet rs = pstm.executeQuery()
         ) {
             while (rs.next()) {
                 customers.add(CustomerMapper.mapToCustomer(rs));
@@ -70,8 +70,8 @@ try (
     @Override
     public void update(int id, Customer customer) {
         try (
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.UPDATE)
+                Connection connection = DBConnection.getInstance().getConnection();
+                PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.UPDATE)
         ) {
             pstm.setString(1, customer.getName());
             pstm.setString(2, customer.getAddress());
@@ -88,8 +88,8 @@ try (
     @Override
     public void delete(int id) {
         try (
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.DELETE)
+                Connection connection = DBConnection.getInstance().getConnection();
+                PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.DELETE)
         ) {
             pstm.setInt(1, id);
             pstm.executeUpdate();
@@ -101,8 +101,8 @@ try (
     @Override
     public int getCount() {
         try (
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.COUNT)
+                Connection connection = DBConnection.getInstance().getConnection();
+                PreparedStatement pstm = connection.prepareStatement(SqlQueries.Customer.COUNT)
         ) {
             try (ResultSet rs = pstm.executeQuery()) {
                 if (rs.next()) {
