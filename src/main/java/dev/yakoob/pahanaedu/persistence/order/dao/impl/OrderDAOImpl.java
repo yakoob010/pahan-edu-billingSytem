@@ -77,8 +77,8 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public int getCount() {
         try (
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement(SqlQueries.Order.COUNT)
+                Connection connection = DBConnection.getInstance().getConnection();
+                PreparedStatement pstm = connection.prepareStatement(SqlQueries.Order.COUNT)
         ) {
             try (ResultSet rs = pstm.executeQuery()) {
                 if (rs.next()) {
@@ -137,17 +137,17 @@ public class OrderDAOImpl implements OrderDAO {
     public List<Order> getAll() {
         List<Order> orders = new ArrayList<>();
         try (
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM orders");
-            ResultSet rs = pstm.executeQuery()
+                Connection connection = DBConnection.getInstance().getConnection();
+                PreparedStatement pstm = connection.prepareStatement("SELECT * FROM orders");
+                ResultSet rs = pstm.executeQuery()
         ) {
             while (rs.next()) {
                 Order order = new Order.Builder()
-                    .setOrderId(String.valueOf(rs.getInt("order_id")))
-                    .setDate(rs.getDate("order_date").toLocalDate())
-                    .setCustomerId(rs.getString("customer_id"))
-                    .setTotalAmount(rs.getDouble("total_amount"))
-                    .build();
+                        .setOrderId(String.valueOf(rs.getInt("order_id")))
+                        .setDate(rs.getDate("order_date").toLocalDate())
+                        .setCustomerId(rs.getString("customer_id"))
+                        .setTotalAmount(rs.getDouble("total_amount"))
+                        .build();
                 orders.add(order);
             }
         } catch (Exception e) {
