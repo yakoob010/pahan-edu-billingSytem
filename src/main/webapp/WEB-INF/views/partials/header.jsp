@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    <%
-        String pageTitle = (String) request.getAttribute("pageTitle");
-        if (pageTitle == null) pageTitle = "Pahana Edu";
-    %>
+<%
+    String pageTitle = (String) request.getAttribute("pageTitle");
+    if (pageTitle == null) pageTitle = "Pahana Edu";
+%>
 <head>
     <meta charset="UTF-8">
     <title><%= pageTitle %></title>
