@@ -1,81 +1,105 @@
-<%@ page import="dev.yakoob.pahanaedu.business.item.dto.ItemDTO" %>
-<%
-    ItemDTO item = (ItemDTO) request.getAttribute("item");
-%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div class="flex items-center justify-center">
-    <div class="w-full max-w-xl px-4 py-8 shadow-lg rounded-lg">
-        <h1 class="text-3xl font-bold mb-6 text-center">Edit Item</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Edit Item</h4>
+                </div>
+                <div class="card-body">
+                    <form action="${pageContext.request.contextPath}/item/edit" method="post" class="needs-validation" novalidate>
+                        <input type="hidden" name="code" value="${item.itemCode}">
 
-        <form action="<%= request.getContextPath() %>/item/edit?code=<%= item.getItemCode() %>" method="post" class="space-y-5">
+                        <div class="mb-3">
+                            <label for="itemName" class="form-label">Item Name</label>
+                            <input type="text" class="form-control" id="itemName" name="itemName"
+                                   value="${item.itemName}" required>
+                            <div class="invalid-feedback">
+                                Please provide an item name.
+                            </div>
+                        </div>
 
-            <!-- Item Name -->
-            <div class="form-control">
-                <label class="label" for="itemName">
-                    <span class="label-text font-semibold">Item Name</span>
-                </label>
-                <input id="itemName" name="itemName" value="<%= item.getItemName() %>" required
-                       class="input input-bordered w-full"/>
+                        <div class="mb-3">
+                            <label for="unitPrice" class="form-label">Unit Price</label>
+                            <input type="number" step="0.01" class="form-control" id="unitPrice" name="unitPrice"
+                                   value="${item.unitPrice}" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid price.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="stockQuantity" class="form-label">Stock Quantity</label>
+                            <input type="number" class="form-control" id="stockQuantity" name="stockQuantity"
+                                   value="${item.stockQuantity}" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid quantity.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <input type="text" class="form-control" id="category" name="category"
+                                   value="${item.category}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description"
+                                      rows="3">${item.description}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="publisher" class="form-label">Publisher</label>
+                            <input type="text" class="form-control" id="publisher" name="publisher"
+                                   value="${item.publisher}" required>
+                            <div class="invalid-feedback">
+                                Please provide a publisher.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="author" class="form-label">Author</label>
+                            <input type="text" class="form-control" id="author" name="author"
+                                   value="${item.author}" required>
+                            <div class="invalid-feedback">
+                                Please provide an author.
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="${pageContext.request.contextPath}/item" class="btn btn-secondary me-md-2">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <!-- Category -->
-            <div class="form-control">
-                <label class="label" for="category">
-                    <span class="label-text font-semibold">Category</span>
-                </label>
-                <input id="category" name="category" value="<%= item.getCategory() %>" required
-                       class="input input-bordered w-full"/>
-            </div>
-
-            <!-- Description -->
-            <div class="form-control">
-                <label class="label" for="description">
-                    <span class="label-text font-semibold">Description</span>
-                </label>
-                <textarea id="description" name="description" class="textarea textarea-bordered w-full"
-                          rows="3"><%= item.getDescription() %></textarea>
-            </div>
-
-            <!-- Unit Price -->
-            <div class="form-control">
-                <label class="label" for="unitPrice">
-                    <span class="label-text font-semibold">Unit Price</span>
-                </label>
-                <input id="unitPrice" name="unitPrice" type="number" step="0.01" value="<%= item.getUnitPrice() %>" required
-                       class="input input-bordered w-full"/>
-            </div>
-
-            <!-- Stock Quantity -->
-            <div class="form-control">
-                <label class="label" for="stockQuantity">
-                    <span class="label-text font-semibold">Stock Quantity</span>
-                </label>
-                <input id="stockQuantity" name="stockQuantity" type="number" value="<%= item.getStockQuantity() %>" required
-                       class="input input-bordered w-full"/>
-            </div>
-
-            <!-- Publisher -->
-            <div class="form-control">
-                <label class="label" for="publisher">
-                    <span class="label-text font-semibold">Publisher</span>
-                </label>
-                <input id="publisher" name="publisher" value="<%= item.getPublisher() %>"
-                       class="input input-bordered w-full"/>
-            </div>
-
-            <!-- Author -->
-            <div class="form-control">
-                <label class="label" for="author">
-                    <span class="label-text font-semibold">Author</span>
-                </label>
-                <input id="author" name="author" value="<%= item.getAuthor() %>"
-                       class="input input-bordered w-full"/>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="form-control mt-6">
-                <button type="submit" class="btn btn-primary w-full">Update Item</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
+<script>
+    // Form validation
+    (function () {
+        'use strict'
+
+        var forms = document.querySelectorAll('.needs-validation')
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
